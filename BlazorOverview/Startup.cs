@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using BlazorOverview.Data;
 using BlazorOverview.Services;
+using BlazorOverview.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BlazorOverview
 {
@@ -31,7 +33,12 @@ namespace BlazorOverview
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
-            services.AddScoped<IMyNoteService, MyNoteService>();
+            services.AddScoped<IMyNoteService, MyNoteDbService>();
+
+            services.AddDbContext<MyNoteDbContext>(options => 
+            {
+                options.UseSqlite("Data Source=MyNote.db");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

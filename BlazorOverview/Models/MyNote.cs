@@ -8,7 +8,9 @@ namespace BlazorOverview.Models
 {
     public class MyNote : ICloneable
     {
-        [Required(ErrorMessage ="事項標題不可為空白")]
+        public int Id { get; set; }
+
+        [Required(ErrorMessage = "事項標題不可為空白")]
         public string Title { get; set; }
 
         public MyNote Clone()

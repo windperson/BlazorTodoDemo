@@ -80,7 +80,7 @@
         await base.OnInitializedAsync();
     }
 
-        private void Add()
+    private void Add()
     {
         IsNewMode = true;
         CurrentMyNote = new MyNote();
@@ -123,6 +123,8 @@
     private async Task Delete(MyNote note)
     {
         await MyNoteService.DeleteAsync(note);
+        Notes = await MyNoteService.RetriveAsync();
+        StateHasChanged();
     }
 
 }

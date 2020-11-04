@@ -1,4 +1,6 @@
 ﻿@using BlazorOverview.Models
+@using BlazorOverview.Services
+@inject IMyNoteService MyNoteService
 
 <h3>我的記事</h3>
 
@@ -72,18 +74,13 @@
     private bool ShowPopup { get; set; } = false;
     private bool IsNewMode { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        Notes = new List<MyNote>()
-        {
-            new MyNote{ Title = "買蘋果"},
-            new MyNote{ Title = "買西瓜"}
-        };
-
-        base.OnInitialized();
+        Notes = await MyNoteService.RetriveAsync();
+        await base.OnInitializedAsync();
     }
 
-    private void Add()
+        private void Add()
     {
         IsNewMode = true;
         CurrentMyNote = new MyNote();
@@ -106,23 +103,26 @@
         ShowPopup = false;
     }
 
-    private void HandleValidSubmit()
+    private async void HandleValidSubmit()
     {
         ShowPopup = false;
 
         if(IsNewMode == true)
         {
-            Notes.Add(CurrentMyNote);
+            await MyNoteService.CreateAsync(CurrentMyNote);
         }
         else
         {
-            OriginMyNote.Title = CurrentMyNote.Title;
+            await MyNoteService.UpdateAsync(OriginMyNote, CurrentMyNote);
         }
+
+        Notes = await MyNoteService.RetriveAsync();
+        StateHasChanged();
     }
 
-    private void Delete(MyNote note)
+    private async Task Delete(MyNote note)
     {
-        Notes.Remove(note);
+        await MyNoteService.DeleteAsync(note);
     }
 
 }

@@ -13,6 +13,7 @@ using BlazorOverview.Data;
 using BlazorOverview.Services;
 using BlazorOverview.Models;
 using Microsoft.EntityFrameworkCore;
+using Blazored.Modal;
 
 namespace BlazorOverview
 {
@@ -35,10 +36,12 @@ namespace BlazorOverview
 
             services.AddScoped<IMyNoteService, MyNoteDbService>();
 
-            services.AddDbContext<MyNoteDbContext>(options => 
+            services.AddDbContext<MyNoteDbContext>(options =>
             {
                 options.UseSqlite("Data Source=MyNote.db");
             });
+
+            services.AddBlazoredModal();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

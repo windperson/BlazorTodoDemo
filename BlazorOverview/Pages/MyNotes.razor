@@ -3,6 +3,7 @@
 @inject IMyNoteService MyNoteService
 @* Inject Js Interop *@
 @inject IJSRuntime jsRuntime
+@inject IModalService Modal
 
 <h3>我的記事</h3>
 
@@ -119,7 +120,34 @@
         StateHasChanged();
     }
 
-    private async Task Delete(MyNote note)
+
+
+    private async void Delete(MyNote note)
+    {
+        CurrentMyNote = note;
+        var parameters = new ModalParameters();
+
+        //For passing to delete confirmation modal window
+        parameters.Add("RecordTitleName", note.Title);
+
+        var formModal = Modal.Show<ConfirmDelete>("確認要刪除嗎？", parameters);
+
+        var modalResult = await formModal.Result;
+
+        if (modalResult.Cancelled)
+        {
+            Console.WriteLine("Delete was cancelled");
+        }
+        else
+        {
+            Console.WriteLine(modalResult.Data.ToString());
+            await DeleteIt(CurrentMyNote);
+            StateHasChanged();
+        }
+
+    }
+
+    private async Task DeleteIt(MyNote note)
     {
         await MyNoteService.DeleteAsync(note);
         Notes = await MyNoteService.RetriveAsync();

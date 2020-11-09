@@ -42,6 +42,9 @@ namespace BlazorOverview
             });
 
             services.AddBlazoredModal();
+
+            //Add Contorller & Web API support without views or razor pages
+            services.AddControllers();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +68,7 @@ namespace BlazorOverview
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapControllers();
                 endpoints.MapBlazorHub();
                 endpoints.MapFallbackToPage("/_Host");
             });

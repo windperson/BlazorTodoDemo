@@ -34,7 +34,7 @@ namespace BlazorOverview
             services.AddServerSideBlazor();
             services.AddSingleton<WeatherForecastService>();
 
-            services.AddScoped<IMyNoteService, MyNoteDbService>();
+            //services.AddScoped<IMyNoteService, MyNoteDbService>();
 
             services.AddDbContext<MyNoteDbContext>(options =>
             {
@@ -45,6 +45,13 @@ namespace BlazorOverview
 
             //Add Contorller & Web API support without views or razor pages
             services.AddControllers();
+
+            //Register IHttpClientFactory DI Service
+            services.AddHttpClient<IMyNoteService, MyNoteWebAPIService>(client =>
+            {
+                client.BaseAddress = new Uri("https://localhost:5001");
+                client.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue(System.Net.Mime.MediaTypeNames.Application.Json));
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
